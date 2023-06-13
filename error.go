@@ -92,8 +92,8 @@ func (e *err) GetDesc() string {
 	return e.Description
 }
 
-func (e *err) WithTrace(id string) Error {
-	e.Trace += ">" + id
+func (e *err) WithTrace(t string) Error {
+	e.Trace = t + "/" + e.Trace
 	return e
 }
 
