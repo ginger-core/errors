@@ -73,6 +73,8 @@ func (p *private) String() string {
 		for k, v := range p.detail {
 			r += " " + k + ": " + fmt.Sprint(v) + "\n"
 		}
+		r += ", "
 	}
+	r = r[0 : len(r)-2]
 	return r
 }
