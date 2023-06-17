@@ -73,6 +73,10 @@ func New(e ...error) Error {
 	var r Error = new(err)
 	if len(e) > 0 && e[0] != nil {
 		r = r.WithError(e[0])
+		if err, ok := e[0].(Error); ok {
+			r.WithType(err.GetType())
+			r.WithId(err.GetId())
+		}
 	}
 	r.WithType(TypeInternal)
 	return r
