@@ -1,42 +1,56 @@
 package errors
 
-var DefaultUnauthorizedError = Unauthorized().
+var DefaultUnauthorizedError = New().
+	WithType(TypeUnauthorized).
 	WithId("UnauthorizedError").
 	WithMessage("You are not authorized.")
 
-var DefaultForbiddenError = Forbidden().
+var DefaultForbiddenError = New().
+	WithType(TypeForbidden).
 	WithId("ForbiddenError").
 	WithMessage("Access to this section is denied.")
 
-var DefaultValidationError = Validation().
+var DefaultValidationError = New().
+	WithType(TypeValidation).
 	WithId("ValidationError").
 	WithMessage("Invalid request information.")
 
-var DefaultNotFoundError = NotFound().
+var DefaultNotFoundError = New().
+	WithType(TypeNotFound).
 	WithId("NotFoundError").
 	WithMessage("Requested information not found.")
 
-var DefaultInternalError = Internal().
+var DefaultInternalError = New().
+	WithType(TypeInternal).
 	WithId("InternalError").
 	WithMessage("Internal error occurred.")
 
-var DefaultDuplicateError = Duplicate().
+var DefaultDuplicateError = New().
+	WithType(TypeDuplicate).
 	WithId("DuplicateEntryError").
 	WithMessage("Requested information already exists.")
 
-var DefaultTooManyRequestsError = TooManyRequests().
+var DefaultTooManyRequestsError = New().
+	WithType(TypeTooManyRequests).
 	WithId("TooManyRequestsError").
 	WithMessage("You've made too many requests recently. " +
 		"Please wait and try your request again later.")
 
-var DefaultExpiredError = TooManyRequests().
+var DefaultExpiredError = New().
+	WithType(TypeExpired).
 	WithId("ExpiredError").
 	WithMessage("Your request has been expired, please start over and try again.")
 
-var DefaultFailedDependencyError = FailedDependency().
+var DefaultFailedDependencyError = New().
+	WithType(TypeFailedDependency).
 	WithId("FailedDependencyError").
 	WithMessage("The request could not be performed on the resource because " +
 		"the requested action depended on another action and that action failed.")
+
+var DefaultTooEarlyError = New().
+	WithType(TypeTooEarly).
+	WithId("TooEarlyError").
+	WithMessage("You're too early!")
 
 var (
 	defaultTypeMap = map[Type]Error{
@@ -49,6 +63,7 @@ var (
 		TypeTooManyRequests:  DefaultTooManyRequestsError,
 		TypeExpired:          DefaultExpiredError,
 		TypeFailedDependency: DefaultFailedDependencyError,
+		TypeTooEarly:         DefaultTooEarlyError,
 	}
 )
 
@@ -57,10 +72,5 @@ func (e *err) ensureDefaults() {
 	if defaultErr == nil {
 		return
 	}
-	if e.Id == "" {
-		e.Id = defaultErr.GetId()
-	}
-	if e.Message == "" {
-		e.Message = defaultErr.GetMessage()
-	}
+	defaultErr.Populate(e)
 }

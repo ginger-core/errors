@@ -79,7 +79,6 @@ func New(e ...error) Error {
 			err.Populate(r)
 		}
 	}
-	r.WithType(TypeInternal)
 	return r
 }
 
@@ -269,9 +268,22 @@ func (e *err) Populate(r Error) {
 	if r == nil {
 		return
 	}
-	r.WithType(e.GetType())
-	r.WithId(e.GetId())
-	r.WithMessage(e.GetMessage())
-	r.WithValues(e.values)
-	r.WithPluralCount(e.pluralCount)
+	if e.GetType() == "" {
+		r.WithType(e.GetType())
+	}
+	if e.GetId() == "" {
+		r.WithId(e.GetId())
+	}
+	if e.GetMessage() == "" {
+		r.WithMessage(e.GetMessage())
+	}
+	if e.GetMessageOne() == "" {
+		r.WithMessageOne(e.GetMessageOne())
+	}
+	if len(e.GetValues()) == 0 {
+		r.WithValues(e.values)
+	}
+	if r.GetPluralCount() == 0 {
+		r.WithPluralCount(e.pluralCount)
+	}
 }
