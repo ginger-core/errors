@@ -21,28 +21,22 @@ type private struct {
 	properties map[string]interface{}
 	// pluralCount determines which plural form of the message is used.
 	pluralCount int
-	// isIdCustomized determines if id has been set by command or still using default message
-	isIdCustomized bool
-	// isMessageCustomized determines if message has been set by command or still using default message
-	isMessageCustomized bool
 }
 
 func (p *private) clone() private {
 	return private{
-		error:               p.error,
-		ctx:                 p.ctx,
-		Id:                  p.Id,
-		Type:                p.Type,
-		Description:         p.Description,
-		Trace:               p.Trace,
-		messageOne:          p.messageOne,
-		values:              p.values,
-		source:              p.source,
-		detail:              p.detail,
-		properties:          p.properties,
-		pluralCount:         p.pluralCount,
-		isIdCustomized:      p.isIdCustomized,
-		isMessageCustomized: p.isMessageCustomized,
+		error:       p.error,
+		ctx:         p.ctx,
+		Id:          p.Id,
+		Type:        p.Type,
+		Description: p.Description,
+		Trace:       p.Trace,
+		messageOne:  p.messageOne,
+		values:      p.values,
+		source:      p.source,
+		detail:      p.detail,
+		properties:  p.properties,
+		pluralCount: p.pluralCount,
 	}
 }
 

@@ -58,6 +58,8 @@ type Error interface {
 	IsType(t Type) bool
 
 	Clone() Error
+	// Populate set current properties to given parameter error
+	Populate(e Error)
 }
 
 type err struct {
@@ -74,8 +76,7 @@ func New(e ...error) Error {
 	if len(e) > 0 && e[0] != nil {
 		r = r.WithError(e[0])
 		if err, ok := e[0].(Error); ok {
-			r.WithType(err.GetType())
-			r.WithId(err.GetId())
+			err.Populate(r)
 		}
 	}
 	r.WithType(TypeInternal)
@@ -134,7 +135,6 @@ func (e *err) GetError() error {
 
 func (e *err) WithId(id string) Error {
 	e.Id = id
-	e.isIdCustomized = true
 	return e
 }
 
@@ -163,7 +163,6 @@ func (e *err) GetType() Type {
 
 func (e *err) WithMessage(message string) Error {
 	e.Message = message
-	e.isMessageCustomized = true
 	return e
 }
 
@@ -264,4 +263,15 @@ func (e *err) Clone() Error {
 		Message: e.Message,
 		Errors:  e.Errors,
 	}
+}
+
+func (e *err) Populate(r Error) {
+	if r == nil {
+		return
+	}
+	r.WithType(e.GetType())
+	r.WithId(e.GetId())
+	r.WithMessage(e.GetMessage())
+	r.WithValues(e.values)
+	r.WithPluralCount(e.pluralCount)
 }

@@ -57,10 +57,10 @@ func (e *err) ensureDefaults() {
 	if defaultErr == nil {
 		return
 	}
-	if e.Id == "" || !e.isIdCustomized {
+	if e.Id == "" {
 		e.Id = defaultErr.GetId()
 	}
-	if e.Message == "" || !e.isMessageCustomized {
+	if e.Message == "" {
 		e.Message = defaultErr.GetMessage()
 	}
 }
