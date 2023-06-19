@@ -67,10 +67,23 @@ var (
 	}
 )
 
+func init() {
+	for _, err := range defaultTypeMap {
+		err.SetChanged(false)
+	}
+}
+
+func NewDefaultError(t Type, err Error) {
+	defaultTypeMap[t] = err
+}
+
 func (e *err) ensureDefaults() {
-	defaultErr := defaultTypeMap[e.Type]
-	if defaultErr == nil {
+	if e.hasChanged {
 		return
 	}
-	defaultErr.Populate(e)
+	defaultError := defaultTypeMap[e.Type]
+	if defaultError == nil {
+		return
+	}
+	defaultError.Populate(e)
 }

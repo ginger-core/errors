@@ -21,6 +21,9 @@ type private struct {
 	properties map[string]interface{}
 	// pluralCount determines which plural form of the message is used.
 	pluralCount int
+	// hasChanged determines if using default values
+	// to make sure changes will not effect custom values
+	hasChanged bool
 }
 
 func (p *private) clone() private {
@@ -37,6 +40,7 @@ func (p *private) clone() private {
 		detail:      p.detail,
 		properties:  p.properties,
 		pluralCount: p.pluralCount,
+		hasChanged:  p.hasChanged,
 	}
 }
 
@@ -71,4 +75,12 @@ func (p *private) String() string {
 	}
 	r = r[0 : len(r)-2]
 	return r
+}
+
+func (p *private) SetChanged(changed bool) {
+	p.hasChanged = changed
+}
+
+func (p *private) HasChanged() bool {
+	return p.hasChanged
 }

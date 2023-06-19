@@ -60,6 +60,14 @@ type Error interface {
 	Clone() Error
 	// Populate set current properties to given parameter error
 	Populate(e Error)
+
+	// SetChanged change has changed state
+	SetChanged(changed bool)
+	// HasChanged get if has changed
+	// By default this method will be called
+	// after changing one of properties of
+	// Id, Message or MessageOne
+	HasChanged() bool
 }
 
 type err struct {
@@ -134,6 +142,7 @@ func (e *err) GetError() error {
 
 func (e *err) WithId(id string) Error {
 	e.Id = id
+	e.SetChanged(true)
 	return e
 }
 
@@ -151,6 +160,9 @@ func (e *err) GetSource() string {
 }
 
 func (e *err) WithType(t Type) Error {
+	if t == e.Type {
+		return nil
+	}
 	e.Type = t
 	e.ensureDefaults()
 	return e
@@ -162,6 +174,7 @@ func (e *err) GetType() Type {
 
 func (e *err) WithMessage(message string) Error {
 	e.Message = message
+	e.SetChanged(true)
 	return e
 }
 
@@ -171,6 +184,7 @@ func (e *err) GetMessage() string {
 
 func (e *err) WithMessageOne(message string) Error {
 	e.messageOne = message
+	e.SetChanged(true)
 	return e
 }
 
@@ -265,25 +279,16 @@ func (e *err) Clone() Error {
 }
 
 func (e *err) Populate(r Error) {
-	if r == nil {
+	if e == nil || r == nil {
 		return
 	}
-	if e.GetType() == "" {
-		r.WithType(e.GetType())
-	}
-	if e.GetId() == "" {
+	if e.HasChanged() || !r.HasChanged() {
 		r.WithId(e.GetId())
-	}
-	if e.GetMessage() == "" {
 		r.WithMessage(e.GetMessage())
-	}
-	if e.GetMessageOne() == "" {
 		r.WithMessageOne(e.GetMessageOne())
-	}
-	if len(e.GetValues()) == 0 {
 		r.WithValues(e.values)
-	}
-	if r.GetPluralCount() == 0 {
 		r.WithPluralCount(e.pluralCount)
+		r.SetChanged(e.hasChanged)
 	}
+	r.WithType(e.GetType())
 }
