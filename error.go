@@ -161,7 +161,7 @@ func (e *err) GetSource() string {
 
 func (e *err) WithType(t Type) Error {
 	if t == e.Type {
-		return nil
+		return e
 	}
 	e.Type = t
 	e.ensureDefaults()
