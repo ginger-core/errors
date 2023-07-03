@@ -9,13 +9,12 @@ import (
 )
 
 func Parse(err error) errors.Error {
-	rErr := errors.New(err)
-
 	s := status.Convert(err)
 	// fill err from status
-	rErr.
-		WithType(GetTypeFromCode(s.Code())).
-		WithMessage(s.Message())
+	rErr := errors.New(err)
+	if ok, et := GetTypeFromCode(s.Code()); ok {
+		rErr.WithType(et)
+	}
 
 	st := s.Details()
 	if len(st) > 0 {

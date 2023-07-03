@@ -49,10 +49,10 @@ func GetCodeFromType(t errors.Type) codes.Code {
 	return codes.Unknown
 }
 
-func GetTypeFromCode(c codes.Code) errors.Type {
+func GetTypeFromCode(c codes.Code) (bool, errors.Type) {
 	t, ok := codeMapsR[c]
 	if ok {
-		return t
+		return true, t
 	}
-	return errors.TypeInternal
+	return false, errors.TypeInternal
 }
